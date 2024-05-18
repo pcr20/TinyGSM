@@ -230,7 +230,7 @@ class TinyGsmSim7020 : public TinyGsmModem<TinyGsmSim7020>, public TinyGsmNBIOT<
      * Power functions
      */
   protected:
-    bool restartImpl()
+    bool restartImpl(const char* pin = NULL)
     {
         /* Hardware Reset */
         pinMode(this->reset_pin, OUTPUT);
