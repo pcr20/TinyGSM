@@ -30,6 +30,7 @@
 #include "TinyGsmNBIOT.tpp"
 #include "TinyGsmTCP.tpp"
 #include "TinyGsmTime.tpp"
+#include "TinyGsmSMS.tpp"
 
 #define GSM_NL "\r\n"
 static const char GSM_OK[] TINY_GSM_PROGMEM    = "OK" GSM_NL;
@@ -333,12 +334,59 @@ class TinyGsmSim7020 : public TinyGsmModem<TinyGsmSim7020>, public TinyGsmNBIOT<
      * Phone Call functions
      */
   public:
-    /*
-     * Messaging functions
-     */
-  protected:
-    // Follows all messaging functions per template
+ /*
+   * Messaging functions
+   */
+ protected:
+  String sendUSSDImpl(const String& code) TINY_GSM_ATTR_NOT_AVAILABLE;
 
+  bool sendSMSImpl(const String& number, const String& text) {
+    bool changesMade = false;
+    if (!commandMode()) { return false; }  // Return immediately
+
+    sendAT(GF("IP"));  // check mode
+    if (readResponseInt() != 2) {
+      sendAT(GF("IP"), 2);  // Put in text messaging mode
+      if (waitResponse() != 1) {
+        return exitAndFail();
+      } else {
+        changesMade = true;
+      }
+    }
+
+    sendAT(GF("PH"));  // check last number
+    if (readResponseString() != String(number)) {
+      sendAT(GF("PH"), number);  // Set the phone number
+      if (waitResponse() != 1) {
+        return exitAndFail();
+      } else {
+        changesMade = true;
+      }
+    }
+
+    sendAT(GF("TD"));  // check the text delimiter
+    if (readResponseString() != String("D")) {
+      sendAT(GF("TDD"));  // Set the text delimiter to the standard 0x0D
+                          //(carriage return)
+      if (waitResponse() != 1) {
+        return exitAndFail();
+      } else {
+        changesMade = true;
+      }
+    }
+
+    if (changesMade) {
+      if (!writeChanges()) return exitAndFail();
+    }
+    // Get out of command mode to actually send the text
+    exitCommand();
+
+    streamWrite(text);
+    stream.write(
+        static_cast<char>(0x0D));  // close off with the carriage return
+
+    return true;
+  }
     /*
      * GSM Location functions
      */
