@@ -51,7 +51,9 @@ enum RegStatus
     REG_OK_SMS       = 6,
     REG_UNKNOWN      = 4,
 };
-class TinyGsmSim7020 : public TinyGsmModem<TinyGsmSim7020>, public TinyGsmNBIOT<TinyGsmSim7020>, public TinyGsmTCP<TinyGsmSim7020, TINY_GSM_MUX_COUNT>, public TinyGsmTime<TinyGsmSim7020> {
+class TinyGsmSim7020 : public TinyGsmModem<TinyGsmSim7020>, public TinyGsmNBIOT<TinyGsmSim7020>,
+                       public TinyGsmTCP<TinyGsmSim7020, TINY_GSM_MUX_COUNT>, public TinyGsmTime<TinyGsmSim7020>,
+                       public TinyGsmSMS<TinyGsmSim7020>{
     friend class TinyGsmModem<TinyGsmSim7020>;
     friend class TinyGsmNBIOT<TinyGsmSim7020>;
     friend class TinyGsmTCP<TinyGsmSim7020, TINY_GSM_MUX_COUNT>;
