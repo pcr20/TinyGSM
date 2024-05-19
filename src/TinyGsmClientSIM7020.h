@@ -58,6 +58,7 @@ class TinyGsmSim7020 : public TinyGsmModem<TinyGsmSim7020>, public TinyGsmNBIOT<
     friend class TinyGsmNBIOT<TinyGsmSim7020>;
     friend class TinyGsmTCP<TinyGsmSim7020, TINY_GSM_MUX_COUNT>;
     friend class TinyGsmTime<TinyGsmSim7020>;
+    friend class TinyGsmSMS<TinyGsmSim7020>;
 
     /*
      * Inner Client
