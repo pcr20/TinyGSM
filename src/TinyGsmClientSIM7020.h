@@ -344,7 +344,7 @@ class TinyGsmSim7020 : public TinyGsmModem<TinyGsmSim7020>, public TinyGsmNBIOT<
   String sendUSSDImpl(const String& code) TINY_GSM_ATTR_NOT_AVAILABLE;
 
   bool sendSMSImpl(const String& number, const String& text) {
-    sendAT(GF("+CMGS=1,",number,"\r",text);  // check mode
+    sendAT(GF("+CMGS=1,"),number,"\r",text);  // check mode
 
      String res1;
         if (waitResponse(10000L, res1) != 1) {
